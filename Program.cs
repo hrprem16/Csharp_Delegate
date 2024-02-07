@@ -1,42 +1,54 @@
 ﻿using System;
-delegate int Calculator(int n);
-namespace ConsoleApp2
+public delegate void MyDelegate(string message);
+
+class Program
 {
-    class DelegateExample
+    static void Main()
     {
-        static int number=100;
+        MyDelegate delegateInstance = new MyDelegate(DisplayMessage);
 
-        static int add(int n)
-        {
-            number =number+ n;
-            return number;
-        }
-        static int mul(int n)
-        {
-            number = number * n;
-            return number;
-        }
-        public static int  getnumber()
-        {
-            return number;
-        }
-        public static void Main(string[] args)
-        {
-            //In C#, delegate is a reference to the method. It works like function pointer in C and C++.
-            //But it is objected-oriented, secured and type-safe than function pointer.
+        delegateInstance("Hello, Delegates");
 
-            // For static method, delegate encapsulates method only.But for instance method,
-            // it encapsulates method and instance both.
+        MyDelegate anotherdeletegateInstance = new MyDelegate(DisplayAnother);
+        anotherdeletegateInstance("delegate are powerful");
 
-            //Internally a delegate declaration defines a class which is the derived class of System.Delegate.
-            Calculator c1 = new Calculator(add);
-            Calculator c2 = new Calculator(mul);
-            c1(20);
-            
-            Console.WriteLine(getnumber());
-            c2(3);
-            Console.WriteLine(getnumber());
+        // Multicast delegate : combining multiple methods
+        MyDelegate multidelegate = DisplayMessage;
+        multidelegate += anotherdeletegateInstance;
 
-        }
+        // Invoke all methods in the muslitcast delegate
+        multidelegate("combined delegate");
+
+        // Remove a method from the multicast delegate
+
+        multidelegate -= DisplayMessage;
+        multidelegate("After removing a method");
+
+        // Using bulit-in Action delegate
+
+        Action<string> actionDelegate = DisplayMessage;
+        actionDelegate("USING ACTION DELEGATE");
+
+        //using built-in function delegate with return type
+
+        Func<int, int,int> addDelegate = AddNumber;
+        Console.WriteLine("sum: " + addDelegate(5, 7));
+
+
+
+
+
+    }
+    static void DisplayMessage(string message)
+    {
+        Console.WriteLine("Message" + message);
+    }
+    static void DisplayAnother(string message)
+    {
+        Console.WriteLine("Another" + message);
+    }
+    static int AddNumber(int a, int b)
+    {
+        return a + b;
     }
 }
