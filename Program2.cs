@@ -1,54 +1,98 @@
-﻿using System;
-public delegate void MyDelegate(string message);
+//Lambda expressions in C# are used like anonymous functions, with the difference that in Lambda expressions you don’t need to specify the type of the value that you input thus making it more flexible to use. 
+//The ‘=>’ is the lambda operator which is used in all lambda expressions. The Lambda expression is divided into two parts, the left side is the input and the right is the expression.
 
-class Program
+//The Lambda Expressions can be of two types: 
+// using System.Linq;
+//->> THe lamda expression can be of two type
+//->Expression Lambda: Consists of the input and the expression.
+//Syntax:
+//input => expression;
+//Statement Lambda: Consists of the input and a set of statements to be executed.
+//Syntax:
+// input => { statements };
+//Let us take some examples to understand the above concept better.
+
+/*Example 1: In the code given below, we have a list of integer numbers. The first lambda expression evaluates every element’s square { x => x*x } and the second is used to find which values are divisible by 3 { x => (x % 3) == 0 }. And the foreach loops are used for displaying. */
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Lambda_Expressions
 {
-    static void Main()
+    class Program
     {
-        MyDelegate delegateInstance = new MyDelegate(DisplayMessage);
+        class Student
+        {
 
-        delegateInstance("Hello, Delegates");
+            // properties rollNo and name
+            public int rollNo
+            {
+                get;
+                set;
+            }
 
-        MyDelegate anotherdeletegateInstance = new MyDelegate(DisplayAnother);
-        anotherdeletegateInstance("delegate are powerful");
+            public string name
+            {
+                get;
+                set;
+            }
+        }
+        static void Main(string[] args)
+        {
+            //List to store number
 
-        // Multicast delegate : combining multiple methods
-        MyDelegate multidelegate = DisplayMessage;
-        multidelegate += anotherdeletegateInstance;
+            List<int> numbers = new List<int>()
+            { 36,71,12,15,29,18,27,17,9,34};
 
-        // Invoke all methods in the muslitcast delegate
-        multidelegate("combined delegate");
+            Console.WriteLine("The List : ");
+            foreach (var value in numbers)
+            {
+                Console.Write(value + " ");
+            }
+            Console.WriteLine("Square of element: ");
+            // Using lambda expression
+            // to calculate square of
+            // each value in the list
+            var sqaure = numbers.Select(x => x * x);
+            foreach (var value in sqaure)
+            {
+                Console.Write(value + " ");
+            }
+            Console.WriteLine();
 
-        // Remove a method from the multicast delegate
+            // Using Lambda expression to
+            // find all numbers in the list
+            // divisible by 3
 
-        multidelegate -= DisplayMessage;
-        multidelegate("After removing a method");
+            List<int> divBy3 = numbers.FindAll(x => (x % 3) == 0);
 
-        // Using bulit-in Action delegate
+            Console.Write("Numbers divisble by 3: ");
+            foreach(var value in divBy3)
+            {
+                Console.Write(value + " ");
+            }
+            Console.WriteLine();
 
-        Action<string> actionDelegate = DisplayMessage;
-        actionDelegate("USING ACTION DELEGATE");
+            // List with each element of type Student
+            List<Student> details = new List<Student>() {
+            new Student{ rollNo = 1, name = "Liza" },
+                new Student{ rollNo = 2, name = "Stewart" },
+                new Student{ rollNo = 3, name = "Tina" },
+                new Student{ rollNo = 4, name = "Stefani" },
+                new Student { rollNo = 5, name = "Trish" }
+             };
 
-        //using built-in function delegate with return type
+            // To sort the details list 
+            // based on name of student
+            // in ascending order
+            var newDetails = details.OrderBy(x => x.name);
 
-        Func<int, int,int> addDelegate = AddNumber;
-        Console.WriteLine("sum: " + addDelegate(5, 7));
+            foreach (var value in newDetails)
+            {
+                Console.WriteLine(value.rollNo + " " + value.name);
+            }
 
-
-
-
-
-    }
-    static void DisplayMessage(string message)
-    {
-        Console.WriteLine("Message" + message);
-    }
-    static void DisplayAnother(string message)
-    {
-        Console.WriteLine("Another" + message);
-    }
-    static int AddNumber(int a, int b)
-    {
-        return a + b;
+        }
     }
 }
